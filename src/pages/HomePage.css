@@ -1,0 +1,198 @@
+.home-page {
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.home-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: nowrap;
+  position: relative;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  gap: 40px;
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  padding: 0;
+}
+
+.home-container .breadcrumbs {
+  align-self: flex-start;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 0;
+}
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  min-height: calc(100vh - 300px);
+  width: 100%;
+}
+
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  gap: 30px;
+  position: relative;
+  width: 100%;
+  text-align: center;
+  padding: 80px 60px;
+  border: 2px solid #d7d7db;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+  min-height: 400px;
+}
+
+.home-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  opacity: 0.7;
+}
+
+.home-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 2;
+}
+
+.home-hero-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+}
+
+.home-title {
+  flex-shrink: 0;
+  flex-basis: auto;
+  position: relative;
+  color: #000000;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.home-description {
+  flex-shrink: 0;
+  flex-basis: auto;
+  position: relative;
+  color: #666666;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.home-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-wrap: nowrap;
+  position: relative;
+  min-width: 80px;
+  min-height: 44px;
+  padding: 11px 17px;
+  background: #ffffff;
+  border: 1px solid #00be6e;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.home-button:hover {
+  background: #f0fdf4;
+}
+
+.button-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  flex-basis: auto;
+  position: relative;
+  height: 22px;
+  color: #00be6e;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .home-main {
+    padding: 20px 16px;
+  }
+  
+  .home-container {
+    gap: 30px;
+  }
+  
+  .home-hero {
+    padding: 50px 30px;
+    gap: 24px;
+    min-height: 350px;
+  }
+  
+  .home-title {
+    font-size: 36px;
+  }
+  
+  .home-description {
+    font-size: 16px;
+  }
+  
+  .home-button {
+    min-width: 80px;
+    padding: 11px 17px;
+  }
+}
