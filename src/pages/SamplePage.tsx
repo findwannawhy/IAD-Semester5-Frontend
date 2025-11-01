@@ -57,7 +57,7 @@ export default function SamplePage() {
   if (loading) {
     return (
       <div className="sample-page">
-        <Header />
+      <Header />
         <div className="sample-page-loader">
           <Spinner animation="border" />
         </div>
@@ -68,7 +68,7 @@ export default function SamplePage() {
   if (!sample) {
     return (
       <div className="sample-page">
-        <Header />
+      <Header />
         <div className="sample-not-found">
           <h1>Вещество не найдено</h1>
         </div>

@@ -64,6 +64,17 @@
   border-radius: 8px;
 }
 
+.nav-area {
+  flex-grow: 1;
+  flex-basis: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 300px;
+  height: 40px;
+  min-height: 40px;
+}
+
 /* Адаптивность */
 @media (max-width: 1400px) {
   .header-container {
@@ -94,6 +105,12 @@
   }
   
   .filler {
+    min-width: 200px;
+    height: 32px;
+    min-height: 32px;
+  }
+
+  .nav-area {
     min-width: 200px;
     height: 32px;
     min-height: 32px;

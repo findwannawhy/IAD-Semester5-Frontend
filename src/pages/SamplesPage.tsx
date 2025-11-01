@@ -1,11 +1,13 @@
 // pages/SamplesPage/SamplesPage.tsx
 import { useEffect, useState } from 'react';
 import Header from '../components/Header/Header';
+import Cart from '../components/Cart/Cart';
 import Search from '../components/Search/Search';
 import SamplesList from '../components/SamplesList/SamplesList';
 import { BreadCrumbs } from '../components/BreadCrumbs/BreadCrumbs';
 import { ROUTE_LABELS } from '../Routes';
 import { getSamples } from '../modules/SamplesApi';
+import { getExperimentDraft } from '../modules/ExperimentsApi';
 import { SAMPLES_MOCK } from '../modules/mock'; 
 import type { AcidSolubleSample } from '../modules/SamplesTypes';
 import './SamplesPage.css';
@@ -15,8 +17,11 @@ export default function SamplesPage() {
   const [searchName, setSearchName] = useState("");
   const [loading, setLoading] = useState(false);
   const [useMock, setUseMock] = useState(false);
+  const [cartCount, setCartCount] = useState<number>(-1);
 
   useEffect(() => {
+    getExperimentDraft().then((d) => setCartCount(d.experiment_id > 0 && d.sample_count > 0 ? d.sample_count : 0));
+
     if (useMock) {
       setSamples(SAMPLES_MOCK);
     } else {
@@ -107,6 +112,7 @@ export default function SamplesPage() {
           )}
         </div>
       </main>
+      <Cart count={cartCount} />
     </div>
   );
 }
