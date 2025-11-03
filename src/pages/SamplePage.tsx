@@ -3,17 +3,19 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BreadCrumbs } from '../components/BreadCrumbs/BreadCrumbs';
 import { ROUTES, ROUTE_LABELS } from '../Routes';
-import { getSample } from '../modules/SamplesApi';
+import { getSample, getRecentlyViewedSamples } from '../modules/SamplesApi';
 import type { AcidSolubleSample } from '../modules/SamplesTypes';
 import { Spinner } from 'react-bootstrap';
 import Header from '../components/Header/Header';
 import { SAMPLES_MOCK } from '../modules/mock';
+import SampleCard from '../components/SampleCard/SampleCard';
 import './SamplePage.css';
 
 export default function SamplePage() {
   const [sample, setSample] = useState<AcidSolubleSample | null>(null);
   const [loading, setLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
+  const [recentlyViewed, setRecentlyViewed] = useState<AcidSolubleSample[]>([]);
   const { id } = useParams();
 
   useEffect(() => {
@@ -44,6 +46,30 @@ export default function SamplePage() {
     fetchSample();
   }, [id]);
 
+  // Загружаем недавно просмотренные образцы после загрузки основного образца
+  useEffect(() => {
+    const fetchRecentlyViewed = async () => {
+      try {
+        const viewed = await getRecentlyViewedSamples();
+        // Исключаем текущий образец из списка недавно просмотренных
+        const filtered = viewed.filter(s => s.id !== Number(id));
+        
+        // Удаляем дубликаты по ID на всякий случай
+        const unique = filtered.filter((sample, index, self) =>
+          index === self.findIndex(s => s.id === sample.id)
+        );
+        
+        // Берем только 3 последних
+        setRecentlyViewed(unique.slice(0, 3));
+      } catch (error) {
+        console.error('Error fetching recently viewed samples:', error);
+      }
+    };
+
+    if (!loading && sample) {
+      fetchRecentlyViewed();
+    }
+  }, [loading, sample, id]);
 
   const getImageUrl = (filename: string) => {
     if (!filename || imageError) return '/src/assets/noimg.png';
@@ -127,6 +153,17 @@ export default function SamplePage() {
               />
             </div>
           </div>
+
+          {recentlyViewed.length > 0 && (
+            <div className="recently-viewed-section">
+              <h2 className="recently-viewed-title">Недавно просмотренные</h2>
+              <div className="recently-viewed-grid">
+                {recentlyViewed.map((viewedSample) => (
+                  <SampleCard key={viewedSample.id} sample={viewedSample} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>

@@ -308,3 +308,48 @@
     height: 300px;
   }
 }
+
+/* Недавно просмотренные образцы */
+.recently-viewed-section {
+  margin-top: 40px;
+  width: 100%;
+}
+
+.recently-viewed-title {
+  color: #000000;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.recently-viewed-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .recently-viewed-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .recently-viewed-section {
+    margin-top: 30px;
+  }
+  
+  .recently-viewed-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .recently-viewed-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
