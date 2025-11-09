@@ -7,67 +7,67 @@ import SamplesList from '../components/SamplesList/SamplesList';
 import { BreadCrumbs } from '../components/BreadCrumbs/BreadCrumbs';
 import { ROUTE_LABELS } from '../Routes';
 import { getSamples } from '../modules/SamplesApi';
-import { getExperimentDraft } from '../modules/ExperimentsApi';
 import { SAMPLES_MOCK } from '../modules/mock'; 
 import type { AcidSolubleSample } from '../modules/SamplesTypes';
 import './SamplesPage.css';
+import { useSearchInput, useAppliedSearch } from '../slices/searchSlice'
+import { useSearchData } from '../hooks/useSearchData'
 
 export default function SamplesPage() {
   const [samples, setSamples] = useState<AcidSolubleSample[]>([]);
-  const [searchName, setSearchName] = useState("");
+  
+  // Используем разделенные состояния
+  const { setSearchInput, applySearch } = useSearchData()
+  const searchInput = useSearchInput() // то, что вводит пользователь
+  const appliedSearch = useAppliedSearch() // то, что применено как фильтр
+  
   const [loading, setLoading] = useState(false);
-  const [useMock, setUseMock] = useState(false);
-  const [cartCount, setCartCount] = useState<number>(-1);
 
+  // Загружаем образцы только при изменении примененного фильтра
   useEffect(() => {
-    getExperimentDraft().then((d) => setCartCount(d.experiment_id > 0 && d.sample_count > 0 ? d.sample_count : 0));
+    loadSamples();
+  }, [appliedSearch]); // Только appliedSearch триггерит загрузку
 
-    if (useMock) {
-      setSamples(SAMPLES_MOCK);
-    } else {
-      getSamples()
-        .then((data) => {
-          if (data.length > 0) {
-            setSamples(data);
-          } else {
-            setSamples(SAMPLES_MOCK);
-            setUseMock(true);
-          }
-        })
-        .catch(() => {
-          setSamples(SAMPLES_MOCK);
-          setUseMock(true);
-        });
-    }
-  }, [useMock]);
-
-  const handleSearch = async () => {
+  const loadSamples = async () => {
     setLoading(true);
     try {
-      const filtered = await getSamples({ name: searchName });
+      // Создаем фильтры на основе appliedSearch (а не searchInput)
+      const filters = appliedSearch ? { name: appliedSearch } : {};
+      const data = await getSamples(filters);
       
-      if (filtered.length > 0) {
-        setSamples(filtered);
-        setUseMock(false);
+      if (data.length > 0) {
+        setSamples(data);
       } else {
-        if (useMock) {
+        // Если с сервера ничего не пришло, пробуем mock
+        if (appliedSearch) {
+          // Если есть поисковый запрос, фильтруем mock
           const filteredMock = SAMPLES_MOCK.filter(sample =>
-            sample.title.toLowerCase().includes(searchName.toLowerCase())
+            sample.title.toLowerCase().includes(appliedSearch.toLowerCase())
           );
           setSamples(filteredMock);
         } else {
-          setSamples([]);
+          // Если нет поискового запроса, показываем все mock
+          setSamples(SAMPLES_MOCK);
         }
       }
     } catch (error) {
-      const filteredMock = SAMPLES_MOCK.filter(sample =>
-        sample.title.toLowerCase().includes(searchName.toLowerCase())
-      );
-      setSamples(filteredMock);
-      setUseMock(true);
+      console.error('Ошибка при загрузке образцов:', error);
+      // При ошибке используем mock с фильтрацией если нужно
+      if (appliedSearch) {
+        const filteredMock = SAMPLES_MOCK.filter(sample =>
+          sample.title.toLowerCase().includes(appliedSearch.toLowerCase())
+        );
+        setSamples(filteredMock);
+      } else {
+        setSamples(SAMPLES_MOCK);
+      }
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = () => {
+    applySearch(); // применяем фильтр только при нажатии кнопки
   };
 
   return (
@@ -88,9 +88,9 @@ export default function SamplesPage() {
           
           <div className="search-wrapper-page">
             <Search 
-              query={searchName}
-              onQueryChange={setSearchName}
-              onSearch={handleSearch}
+              query={searchInput} // показываем то, что вводит пользователь
+              onQueryChange={setSearchInput} // обновляем только поле ввода
+              onSearch={handleSearch} // применяем фильтр только при отправке
             />
           </div>
 
@@ -102,8 +102,8 @@ export default function SamplesPage() {
                 <SamplesList samples={samples} />
               ) : (
                 <div className="no-samples">
-                  {searchName 
-                    ? `По запросу "${searchName}" вещества не найдены` 
+                  {appliedSearch
+                    ? `По запросу "${appliedSearch}" вещества не найдены` 
                     : 'Вещества не найдены'
                   }
                 </div>
@@ -112,7 +112,7 @@ export default function SamplesPage() {
           )}
         </div>
       </main>
-      <Cart count={cartCount} />
+      <Cart />
     </div>
   );
 }
