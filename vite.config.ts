@@ -27,4 +27,5 @@ export default defineConfig({
     strictPort: true, // не даст использовать другой порт если 3000 занят
   },
   plugins: [react()],
+  base: "/IAD-Semester5-UI/",
 })

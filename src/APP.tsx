@@ -15,7 +15,7 @@ function App() {
     }
   }, []);
   return (
-    <BrowserRouter>
+    <BrowserRouter  basename="/IAD-Semester5-UI"> {/* имя репозитория */}
       <Routes>
         <Route path={ROUTES.HOME} element={<HomePage />} />
         <Route path={ROUTES.SAMPLES} element={<SamplesPage />} />
