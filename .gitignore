@@ -23,5 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
+# SSL сертификаты для локальной разработки
 cert.key
 cert.crt
+ca.key
+ca.crt
