@@ -28,3 +28,20 @@
 .breadcrumbs li:last-child {
   color: var(--active_color);
 }
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .breadcrumbs {
+    gap: 8px;
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumbs {
+    gap: 6px;
+    font-size: 13px;
+    flex-wrap: wrap;
+  }
+}

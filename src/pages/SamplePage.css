@@ -299,13 +299,95 @@
   }
   
   .sample-title {
-    font-size: 32px;
+    font-size: 28px;
     height: auto;
     line-height: 1.2;
+    white-space: normal;
   }
   
   .substance-image {
     height: 300px;
+  }
+  
+  .description-title {
+    font-size: 18px;
+  }
+  
+  .description-text-content {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .relative-molecular-mass-item,
+  .stoichiometric-coefficient-item {
+    font-size: 14px;
+    white-space: normal;
+  }
+  
+  .label-bold {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sample-main {
+    padding: 16px 12px;
+  }
+  
+  .sample-container {
+    gap: 0;
+  }
+  
+  .container-content {
+    gap: 16px;
+    flex-direction: column;
+  }
+  
+  .left-part {
+    width: 100%;
+  }
+  
+  .sample-title {
+    font-size: 24px;
+    height: auto;
+    line-height: 1.3;
+    white-space: normal;
+  }
+  
+  .description-container {
+    padding: 12px 0;
+    gap: 8px;
+  }
+  
+  .description-title {
+    font-size: 16px;
+    height: auto;
+  }
+  
+  .description-text-content {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  
+  .relative-molecular-mass-item,
+  .stoichiometric-coefficient-item {
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: normal;
+  }
+  
+  .label-bold {
+    font-size: 13px;
+  }
+  
+  .molar-mass-value,
+  .coeff-value {
+    font-size: 13px;
+  }
+  
+  .substance-image {
+    width: 100%;
+    height: 250px;
   }
 }
 
@@ -344,8 +426,24 @@
   }
   
   .recently-viewed-title {
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  
+  .recently-viewed-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .recently-viewed-section {
+    margin-top: 24px;
+  }
+  
+  .recently-viewed-title {
+    font-size: 20px;
+    margin-bottom: 16px;
   }
   
   .recently-viewed-grid {

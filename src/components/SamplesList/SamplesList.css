@@ -12,14 +12,30 @@
   box-sizing: border-box;
 }
 
-/* Адаптивность для мобильных устройств */
+/* Адаптивность для планшетов */
 @media (max-width: 768px) {
   .grid-list {
     flex-direction: column;
     align-items: stretch;
+    gap: 20px;
   }
   
   .grid-list > * {
     max-width: 100%;
+    min-width: 100%;
+  }
+}
+
+/* Адаптивность для телефонов */
+@media (max-width: 480px) {
+  .grid-list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .grid-list > * {
+    max-width: 100%;
+    min-width: 100%;
   }
 }

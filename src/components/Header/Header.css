@@ -105,13 +105,48 @@
   }
   
   .filler {
-    min-width: 200px;
+    min-width: 150px;
     height: 32px;
     min-height: 32px;
   }
 
   .nav-area {
-    min-width: 200px;
+    min-width: 150px;
+    height: 32px;
+    min-height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    height: 56px;
+  }
+  
+  .header-container {
+    height: 57px;
+    padding: 10px 12px;
+    flex-wrap: nowrap;
+  }
+  
+  .logo {
+    width: 80px;
+    height: 32px;
+    padding: 6px;
+  }
+  
+  .logo-image {
+    width: 48px;
+    height: 30px;
+  }
+  
+  .filler {
+    min-width: 80px;
+    height: 32px;
+    min-height: 32px;
+  }
+
+  .nav-area {
+    min-width: 80px;
     height: 32px;
     min-height: 32px;
   }

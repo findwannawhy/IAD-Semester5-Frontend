@@ -214,3 +214,111 @@
   text-align: center;
   white-space: nowrap;
 }
+
+/* Адаптивность для планшетов */
+@media (max-width: 768px) {
+  .sample-card {
+    min-width: 280px;
+    max-width: 100%;
+  }
+  
+  .sample-body {
+    padding: 20px 28px;
+    gap: 16px;
+  }
+  
+  .sample-name span {
+    font-size: 15px;
+    height: auto;
+    line-height: 1.4;
+  }
+  
+  .description-text {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  
+  .relative-molecular-mass,
+  .stoichiometric-coefficient {
+    font-size: 14px;
+  }
+  
+  .label-bold,
+  .value {
+    font-size: 14px;
+  }
+}
+
+/* Адаптивность для телефонов */
+@media (max-width: 480px) {
+  .sample-card {
+    min-width: 100%;
+    max-width: 100%;
+    border-radius: 16px;
+  }
+  
+  .sample-image {
+    height: 220px;
+  }
+  
+  .sample-body {
+    padding: 20px 24px;
+    gap: 16px;
+  }
+  
+  .sample-name span {
+    font-size: 15px;
+    height: auto;
+    line-height: 1.4;
+    white-space: normal;
+    text-align: center;
+  }
+  
+  .sample-texts {
+    min-height: 80px;
+  }
+  
+  .sample-description {
+    min-height: 80px;
+  }
+  
+  .description-text {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  
+  .material-data {
+    gap: 8px;
+  }
+  
+  .relative-molecular-mass,
+  .stoichiometric-coefficient {
+    font-size: 13px;
+  }
+  
+  .label-bold {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  
+  .value {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 2px;
+  }
+  
+  .sample-buttons {
+    gap: 8px;
+    flex-direction: column;
+  }
+  
+  .details-button,
+  .add-button {
+    width: 100%;
+    min-width: 100%;
+  }
+  
+  .button-text {
+    font-size: 14px;
+  }
+}
