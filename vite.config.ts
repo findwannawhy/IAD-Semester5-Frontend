@@ -7,8 +7,8 @@ import path from 'path';
 
 // Определяем, работаем ли мы в Docker (проверяем переменную окружения из docker-compose.yml)
 const isDocker = process.env.DOCKER === 'true';
-//const apiHost = isDocker ? 'http://host.docker.internal:8080' : 'http://localhost:8080';
-const minioHost = isDocker ? 'http://host.docker.internal:9000' : 'http://localhost:9000';
+const apiHost = isDocker ? 'http://host.docker.internal:8080' : 'http://192.168.1.4:8080';
+const minioHost = isDocker ? 'http://host.docker.internal:9000' : 'http://192.168.1.4:9000';
 
 export default defineConfig({
   server: {
@@ -18,7 +18,7 @@ export default defineConfig({
     },
     proxy: {
       "/api": {
-        target: "http://192.168.1.4:8080",
+        target: apiHost,
         changeOrigin: true,
       },
       "/img": {
