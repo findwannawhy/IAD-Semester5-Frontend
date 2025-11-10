@@ -27,7 +27,8 @@
   align-items: center;
   justify-content: center;
   flex-wrap: nowrap;
-  position: relative;
+  position: absolute;
+  left: 0;
   width: 120px;
   height: 44px;
   padding: 12px 12px 12px 12px;
