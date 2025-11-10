@@ -9,12 +9,13 @@ import { Spinner } from 'react-bootstrap';
 import Header from '../components/Header/Header';
 import { SAMPLES_MOCK } from '../modules/mock';
 import SampleCard from '../components/SampleCard/SampleCard';
+import defaultSampleImage from '../assets/noimg.png';
 import './SamplePage.css';
 
 export default function SamplePage() {
   const [sample, setSample] = useState<AcidSolubleSample | null>(null);
   const [loading, setLoading] = useState(true);
-  const [imageError, setImageError] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>('');
   const [recentlyViewed, setRecentlyViewed] = useState<AcidSolubleSample[]>([]);
   const { id } = useParams();
 
@@ -71,13 +72,18 @@ export default function SamplePage() {
     }
   }, [loading, sample, id]);
 
-  const getImageUrl = (filename: string) => {
-    if (!filename || imageError) return '/src/assets/noimg.png';
-    return `/img/${filename}`;
-  };
+  // Обновляем URL изображения при изменении образца
+  useEffect(() => {
+    if (sample?.image_url) {
+      setImageUrl(`/img/${sample.image_url}`);
+    } else {
+      setImageUrl(defaultSampleImage);
+    }
+  }, [sample]);
 
   const handleImageError = () => {
-    setImageError(true);
+    console.log('Ошибка загрузки изображения, используем мок-изображение');
+    setImageUrl(defaultSampleImage);
   };
 
   if (loading) {
@@ -123,6 +129,14 @@ export default function SamplePage() {
                 </div>
               </div>
               
+              <div className="substance-image substance-image-mobile">
+                <img 
+                  src={imageUrl} 
+                  alt={sample.title}
+                  onError={handleImageError}
+                />
+              </div>
+              
               <div className="sample-description-block">
                 <div className="description-container">
                   <div className="description-title-container">
@@ -145,9 +159,9 @@ export default function SamplePage() {
               </div>
             </div>
             
-            <div className="substance-image">
+            <div className="substance-image substance-image-desktop">
               <img 
-                src={getImageUrl(sample.image_url)} 
+                src={imageUrl} 
                 alt={sample.title}
                 onError={handleImageError}
               />
