@@ -4,16 +4,8 @@ import { HomePage } from "./pages/HomePage";
 import SamplesPage from "./pages/SamplesPage";
 import SamplePage from './pages/SamplePage';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { useEffect } from "react";
 
 function App() {
-  useEffect(() => {
-    if ((window as any).__TAURI__) {
-      console.log('Tauri is available');
-    } else {
-      console.log('Running in browser mode');
-    }
-  }, []);
   return (
     <BrowserRouter  basename="/IAD-Semester5-UI"> {/* имя репозитория */}
       <Routes>

@@ -70,5 +70,5 @@ export default defineConfig({
       }
     }),
   ],
-  base: "/IAD-Semester5-UI/",
+  base: "/IAD-Semester5-UI",
 })
