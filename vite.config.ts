@@ -2,8 +2,6 @@ import { defineConfig } from 'vite'
 import mkcert from 'vite-plugin-mkcert'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
-import fs from 'fs';
-import path from 'path';
 
 // Определяем, работаем ли мы в Docker (проверяем переменную окружения из docker-compose.yml)
 const isDocker = process.env.DOCKER === 'true';
@@ -12,18 +10,16 @@ const minioHost = isDocker ? 'http://host.docker.internal:9000' : 'http://192.16
 
 export default defineConfig({
   server: {
-    https:{
-      key: fs.readFileSync(path.resolve(__dirname, 'cert.key')),
-      cert: fs.readFileSync(path.resolve(__dirname, 'cert.crt')),
-    },
     proxy: {
       "/api": {
         target: apiHost,
         changeOrigin: true,
+        rewrite: (path) => path, // не удаляем /api из пути
       },
       "/img": {
         target: minioHost,
         changeOrigin: true,
+        rewrite: (path) => path, // не удаляем /img из пути
       },
     }, 
     port: 3000,
@@ -70,5 +66,5 @@ export default defineConfig({
       }
     }),
   ],
-  base: "/IAD-Semester5-UI/",
+  base: "/"
 })

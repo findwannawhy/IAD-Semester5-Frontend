@@ -10,6 +10,7 @@ import Header from '../components/Header/Header';
 import { SAMPLES_MOCK } from '../modules/mock';
 import SampleCard from '../components/SampleCard/SampleCard';
 import defaultSampleImage from '../assets/noimg.png';
+import { dest_img } from '../target_config';
 import './SamplePage.css';
 
 export default function SamplePage() {
@@ -75,7 +76,7 @@ export default function SamplePage() {
   // Обновляем URL изображения при изменении образца
   useEffect(() => {
     if (sample?.image_url) {
-      setImageUrl(`/img/${sample.image_url}`);
+      setImageUrl(`${dest_img}/img/${sample.image_url}`);
     } else {
       setImageUrl(defaultSampleImage);
     }

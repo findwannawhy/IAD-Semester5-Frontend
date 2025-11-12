@@ -1,8 +1,9 @@
 import type { ExperimentDraftInfo } from "./ExperimentsTypes";
+import { dest_api } from "../target_config";
 
 export async function getExperimentDraft(): Promise<ExperimentDraftInfo> {
   try {
-    const res = await fetch("/api/v1/impurity-experiments/draft", {
+    const res = await fetch(`${dest_api}/api/v1/impurity-experiments/draft`, {
       headers: { Accept: "application/json" },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);

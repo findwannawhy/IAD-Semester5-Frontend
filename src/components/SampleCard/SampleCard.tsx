@@ -4,13 +4,14 @@ import type { AcidSolubleSample } from "../../modules/SamplesTypes";
 import './SampleCard.css';
 import { useState, useEffect } from 'react';
 import defaultSampleImage from '../../assets/noimg.png';
+import { dest_img } from '../../target_config';
 
 export default function SampleCard({ sample }: { sample: AcidSolubleSample }) {
     const [imageError, setImageError] = useState(false);
     
     const getImageUrl = (filename: string) => {
         if (!filename) return defaultSampleImage;
-        return `/img/${filename}`;
+        return `${dest_img}/img/${filename}`;
     };
 
     const [imageUrl, setImageUrl] = useState(getImageUrl(sample.image_url));
