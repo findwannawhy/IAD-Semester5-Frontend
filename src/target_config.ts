@@ -1,6 +1,6 @@
 // Конфигурация для переключения между dev режимом (через прокси) и Tauri build (прямое подключение по IP)
 // Установите target_tauri = true перед сборкой Tauri приложения
-// Установите target_tauri = false для разработки через npm run dev
+// Установите target_tauri = false для разработки через npm run dev или npm run tauri dev
 
 const target_tauri = false;
 
