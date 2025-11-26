@@ -1,43 +1,45 @@
 // pages/SamplePage/SamplePage.tsx
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { BreadCrumbs } from '../components/BreadCrumbs/BreadCrumbs';
-import { ROUTES, ROUTE_LABELS } from '../Routes';
-import { getSample, getRecentlyViewedSamples } from '../modules/SamplesApi';
-import type { AcidSolubleSample } from '../modules/SamplesTypes';
-import { Spinner } from 'react-bootstrap';
-import Header from '../components/Header/Header';
-import { SAMPLES_MOCK } from '../modules/mock';
-import SampleCard from '../components/SampleCard/SampleCard';
-import defaultSampleImage from '../assets/noimg.png';
-import './SamplePage.css';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { BreadCrumbs } from "../components/BreadCrumbs/BreadCrumbs";
+import { ROUTES, ROUTE_LABELS } from "../Routes";
+import { getSample, getSamples } from "../modules/SamplesApi";
+import type { AcidSolubleSample } from "../modules/SamplesTypes";
+import { Spinner } from "react-bootstrap";
+import Header from "../components/Header/Header";
+import { SAMPLES_MOCK } from "../modules/mock";
+import SampleCard from "../components/SampleCard/SampleCard";
+import defaultSampleImage from "../assets/noimg.png";
+import "./SamplePage.css";
 
 export default function SamplePage() {
   const [sample, setSample] = useState<AcidSolubleSample | null>(null);
   const [loading, setLoading] = useState(true);
-  const [imageUrl, setImageUrl] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [recentlyViewed, setRecentlyViewed] = useState<AcidSolubleSample[]>([]);
   const { id } = useParams();
 
   useEffect(() => {
     if (!id) return;
-    
+
     const fetchSample = async () => {
       try {
         setLoading(true);
         const sampleData = await getSample(Number(id));
-        
+
         // Если API вернуло null (ошибка), используем моки
         if (!sampleData) {
-          const mockSample = SAMPLES_MOCK.find(s => s.id === Number(id)) || null;
+          const mockSample =
+            SAMPLES_MOCK.find((s) => s.id === Number(id)) || null;
           setSample(mockSample);
         } else {
           setSample(sampleData);
         }
       } catch (error) {
-        console.error('Error fetching sample, using mocks:', error);
+        console.error("Error fetching sample, using mocks:", error);
         // При ошибке используем моки
-        const mockSample = SAMPLES_MOCK.find(s => s.id === Number(id)) || null;
+        const mockSample =
+          SAMPLES_MOCK.find((s) => s.id === Number(id)) || null;
         setSample(mockSample);
       } finally {
         setLoading(false);
@@ -51,19 +53,27 @@ export default function SamplePage() {
   useEffect(() => {
     const fetchRecentlyViewed = async () => {
       try {
-        const viewed = await getRecentlyViewedSamples();
+        const viewed = await getSamples({ recentlyViewed: true });
         // Исключаем текущий образец из списка недавно просмотренных
-        const filtered = viewed.filter(s => s.id !== Number(id));
-        
-        // Удаляем дубликаты по ID на всякий случай
-        const unique = filtered.filter((sample, index, self) =>
-          index === self.findIndex(s => s.id === sample.id)
+        const filtered = viewed.filter(
+          (s: AcidSolubleSample) => s.id !== Number(id)
         );
-        
+
+        // Удаляем дубликаты по ID на всякий случай
+        const unique = filtered.filter(
+          (
+            sample: AcidSolubleSample,
+            index: number,
+            self: AcidSolubleSample[]
+          ) =>
+            index ===
+            self.findIndex((s: AcidSolubleSample) => s.id === sample.id)
+        );
+
         // Берем только 3 последних
         setRecentlyViewed(unique.slice(0, 3));
       } catch (error) {
-        console.error('Error fetching recently viewed samples:', error);
+        console.error("Error fetching recently viewed samples:", error);
       }
     };
 
@@ -82,14 +92,14 @@ export default function SamplePage() {
   }, [sample]);
 
   const handleImageError = () => {
-    console.log('Ошибка загрузки изображения, используем мок-изображение');
+    console.log("Ошибка загрузки изображения, используем мок-изображение");
     setImageUrl(defaultSampleImage);
   };
 
   if (loading) {
     return (
       <div className="sample-page">
-      <Header />
+        <Header />
         <div className="sample-page-loader">
           <Spinner animation="border" />
         </div>
@@ -100,7 +110,7 @@ export default function SamplePage() {
   if (!sample) {
     return (
       <div className="sample-page">
-      <Header />
+        <Header />
         <div className="sample-not-found">
           <h1>Вещество не найдено</h1>
         </div>
@@ -111,7 +121,7 @@ export default function SamplePage() {
   return (
     <div className="sample-page">
       <Header />
-      
+
       <main className="sample-main">
         <div className="sample-container">
           <BreadCrumbs
@@ -125,43 +135,57 @@ export default function SamplePage() {
             <div className="left-part">
               <div className="sample-header">
                 <div className="sample-header-wrapper">
-                  <span className="sample-title">{sample.title} ({sample.formula})</span>
+                  <span className="sample-title">
+                    {sample.title} ({sample.formula})
+                  </span>
                 </div>
               </div>
-              
+
               <div className="substance-image substance-image-mobile">
-                <img 
-                  src={imageUrl} 
+                <img
+                  src={imageUrl}
                   alt={sample.title}
                   onError={handleImageError}
                 />
               </div>
-              
+
               <div className="sample-description-block">
                 <div className="description-container">
                   <div className="description-title-container">
                     <span className="description-title">Описание</span>
                   </div>
                   <div className="description-text-container">
-                    <span className="description-text-content">{sample.description}</span>
+                    <span className="description-text-content">
+                      {sample.description}
+                    </span>
                   </div>
                   <div className="horizontal-divider"></div>
                   <div className="relative-molecular-mass-item">
-                    <span className="label-bold">Относительная молекулярная масса:</span>
-                    <span className="molar-mass-value"> {sample.relative_molecular_mass?.toFixed(2) ?? 'N/A'} г/моль</span>
+                    <span className="label-bold">
+                      Относительная молекулярная масса:
+                    </span>
+                    <span className="molar-mass-value">
+                      {" "}
+                      {sample.relative_molecular_mass?.toFixed(2) ?? "N/A"}{" "}
+                      г/моль
+                    </span>
                   </div>
                   <div className="stoichiometric-coefficient-item">
-                    <span className="label-bold">Стехиометрический коэффициент:</span>
+                    <span className="label-bold">
+                      Стехиометрический коэффициент:
+                    </span>
                     <span className="coeff-space"> </span>
-                    <span className="coeff-value">{sample.stoichiometric_coefficient ?? 'N/A'}</span>
+                    <span className="coeff-value">
+                      {sample.stoichiometric_coefficient ?? "N/A"}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <div className="substance-image substance-image-desktop">
-              <img 
-                src={imageUrl} 
+              <img
+                src={imageUrl}
                 alt={sample.title}
                 onError={handleImageError}
               />
