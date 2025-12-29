@@ -6,68 +6,94 @@ import Search from '../components/Search/Search';
 import SamplesList from '../components/SamplesList/SamplesList';
 import { BreadCrumbs } from '../components/BreadCrumbs/BreadCrumbs';
 import { ROUTE_LABELS } from '../Routes';
-import { getSamples } from '../modules/SamplesApi';
-import { SAMPLES_MOCK } from '../modules/mock'; 
+import { getSamplesPaginated } from '../modules/SamplesApi';
 import type { AcidSolubleSample } from '../modules/SamplesTypes';
 import './SamplesPage.css';
 import { useSearchInput, useAppliedSearch } from '../slices/searchSlice'
 import { useSearchData } from '../hooks/useSearchData'
 
+const ITEMS_PER_PAGE = 20;
+
 export default function SamplesPage() {
   const [samples, setSamples] = useState<AcidSolubleSample[]>([]);
+  const [loading, setLoading] = useState(false);
+  
+  // Пагинация
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
   
   // Используем разделенные состояния
   const { setSearchInput, applySearch } = useSearchData()
-  const searchInput = useSearchInput() // то, что вводит пользователь
-  const appliedSearch = useAppliedSearch() // то, что применено как фильтр
-  
-  const [loading, setLoading] = useState(false);
+  const searchInput = useSearchInput()
+  const appliedSearch = useAppliedSearch()
 
-  // Загружаем образцы только при изменении примененного фильтра
+  // Загружаем образцы при изменении страницы или примененного фильтра
   useEffect(() => {
     loadSamples();
-  }, [appliedSearch]); // Только appliedSearch триггерит загрузку
+  }, [appliedSearch, currentPage]);
+
+  // Сбрасываем на первую страницу при новом поиске
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [appliedSearch]);
 
   const loadSamples = async () => {
     setLoading(true);
     try {
-      // Создаем фильтры на основе appliedSearch (а не searchInput)
-      const filters = appliedSearch ? { name: appliedSearch } : {};
-      const data = await getSamples(filters);
+      const data = await getSamplesPaginated({
+        name: appliedSearch || undefined,
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
+      });
       
-      if (data.length > 0) {
-        setSamples(data);
-      } else {
-        // Если с сервера ничего не пришло, пробуем mock
-        if (appliedSearch) {
-          // Если есть поисковый запрос, фильтруем mock
-          const filteredMock = SAMPLES_MOCK.filter(sample =>
-            sample.title.toLowerCase().includes(appliedSearch.toLowerCase())
-          );
-          setSamples(filteredMock);
-        } else {
-          // Если нет поискового запроса, показываем все mock
-          setSamples(SAMPLES_MOCK);
-        }
-      }
+      setSamples(data.samples || []);
+      setTotalPages(data.total_pages);
+      setTotalItems(data.total);
     } catch (error) {
       console.error('Ошибка при загрузке образцов:', error);
-      // При ошибке используем mock с фильтрацией если нужно
-      if (appliedSearch) {
-        const filteredMock = SAMPLES_MOCK.filter(sample =>
-          sample.title.toLowerCase().includes(appliedSearch.toLowerCase())
-        );
-        setSamples(filteredMock);
-      } else {
-        setSamples(SAMPLES_MOCK);
-      }
+      setSamples([]);
+      setTotalPages(0);
+      setTotalItems(0);
     } finally {
       setLoading(false);
     }
   };
 
   const handleSearch = () => {
-    applySearch(); // применяем фильтр только при нажатии кнопки
+    applySearch();
+  };
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Генерация номеров страниц для отображения
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisible = 5;
+    
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      
+      if (currentPage > 3) pages.push('...');
+      
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+      
+      for (let i = start; i <= end; i++) pages.push(i);
+      
+      if (currentPage < totalPages - 2) pages.push('...');
+      
+      pages.push(totalPages);
+    }
+    
+    return pages;
   };
 
   return (
@@ -88,11 +114,18 @@ export default function SamplesPage() {
           
           <div className="search-wrapper-page">
             <Search 
-              query={searchInput} // показываем то, что вводит пользователь
-              onQueryChange={setSearchInput} // обновляем только поле ввода
-              onSearch={handleSearch} // применяем фильтр только при отправке
+              query={searchInput}
+              onQueryChange={setSearchInput}
+              onSearch={handleSearch}
             />
           </div>
+
+          {/* Информация о результатах */}
+          {!loading && totalItems > 0 && (
+            <div className="results-info">
+              Найдено: {totalItems} | Страница {currentPage} из {totalPages}
+            </div>
+          )}
 
           {loading ? (
             <div className="loading">Загрузка...</div>
@@ -108,6 +141,43 @@ export default function SamplesPage() {
                   }
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Пагинация */}
+          {!loading && totalPages > 1 && (
+            <div className="pagination">
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                ← Назад
+              </button>
+              
+              <div className="pagination-pages">
+                {getPageNumbers().map((page, index) => (
+                  typeof page === 'number' ? (
+                    <button
+                      key={index}
+                      className={`pagination-page ${currentPage === page ? 'active' : ''}`}
+                      onClick={() => handlePageChange(page)}
+                    >
+                      {page}
+                    </button>
+                  ) : (
+                    <span key={index} className="pagination-ellipsis">{page}</span>
+                  )
+                ))}
+              </div>
+              
+              <button 
+                className="pagination-btn"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Вперёд →
+              </button>
             </div>
           )}
         </div>
