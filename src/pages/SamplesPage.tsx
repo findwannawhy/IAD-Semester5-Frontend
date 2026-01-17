@@ -120,13 +120,6 @@ export default function SamplesPage() {
             />
           </div>
 
-          {/* Информация о результатах */}
-          {!loading && totalItems > 0 && (
-            <div className="results-info">
-              Найдено: {totalItems} | Страница {currentPage} из {totalPages}
-            </div>
-          )}
-
           {loading ? (
             <div className="loading">Загрузка...</div>
           ) : (
